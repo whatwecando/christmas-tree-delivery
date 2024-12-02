@@ -1,0 +1,11 @@
+name = "christmas-tree-delivery"
+main = "src/worker.ts"
+compatibility_date = "2023-12-01"
+
+[vars]
+ENVIRONMENT = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "christmas_tree_delivery"
+database_id = "your-database-id"
