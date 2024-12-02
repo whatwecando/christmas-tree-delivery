@@ -22,6 +22,8 @@ export interface TreeOrder {
   orderDate: string;
   requestScoutDelivery: boolean;
   deliveryStatus: DeliveryStatus;
+  paymentStatus: PaymentStatus;
+  price: number;
   notes?: string;
   history?: HistoryEntry[];
 }
