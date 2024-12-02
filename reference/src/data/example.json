@@ -1,0 +1,28 @@
+{
+  "deliveries": [
+    {
+      "Nom client": "Martin Dupont",
+      "Adresse": "12 rue des Sapins, 75001 Paris",
+      "Téléphone": "06 01 02 03 04",
+      "Taille sapin": "1.2m",
+      "Date souhaitée": "20/12/2023",
+      "Scout": "oui"
+    },
+    {
+      "Nom client": "Sophie Laurent",
+      "Adresse": "45 avenue des Pins, 75002 Paris",
+      "Téléphone": "06 07 08 09 10",
+      "Taille sapin": "1.8m",
+      "Date souhaitée": "18/12/2023",
+      "Scout": "non"
+    },
+    {
+      "Nom client": "Jean Dujardin",
+      "Adresse": "8 boulevard des Épicéas, 75003 Paris",
+      "Téléphone": "06 11 12 13 14",
+      "Taille sapin": "2.5m",
+      "Date souhaitée": "15/12/2023",
+      "Scout": "oui"
+    }
+  ]
+}

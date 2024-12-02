@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo">
+    <ActionBar title="🎄 Livraison de Sapins" />
+    
+    <ListView items="{{ deliveries }}" itemTap="{{ onDeliveryTap }}">
+        <ListView.itemTemplate>
+            <GridLayout rows="auto" columns="*" class="p-2">
+                <StackLayout class="{{ isDelivered ? 'delivered' : 'not-delivered' }} delivery-card">
+                    <Label text="{{ customerName }}" class="font-bold text-lg" />
+                    <Label text="{{ address }}" textWrap="true" />
+                    <Label text="{{ phoneNumber }}" />
+                    <Label text="{{ treeSize }}" />
+                    <GridLayout columns="*, auto" class="mt-2">
+                        <Label text="{{ isDelivered ? '✅ Livré' : '🚚 En attente' }}" col="0" />
+                        <Button text="{{ isDelivered ? 'Annuler' : 'Marquer livré' }}" 
+                                tap="{{ $parent.onStatusChange }}"
+                                col="1" />
+                    </GridLayout>
+                </StackLayout>
+            </GridLayout>
+        </ListView.itemTemplate>
+    </ListView>
+</Page>
