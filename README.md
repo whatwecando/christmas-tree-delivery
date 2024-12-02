@@ -1,20 +1,21 @@
-# Christmas Tree Delivery App
+# Application de Livraison de Sapins de Noël
 
-Application mobile pour la gestion et le suivi des livraisons de sapins de Noël.
+Application web responsive pour la gestion et le suivi des livraisons de sapins de Noël.
 
-## Fonctionnalités
+## Fonctionnalités principales
 
-- Suivi en temps réel des livraisons de sapins
-- Interface mobile réactive
-- Synchronisation des données via Cloudflare
-- Base de données en temps réel
+- 🎄 Catalogue de sapins avec différentes tailles et variétés
+- 📅 Système de réservation avec choix de la date de livraison
+- 📍 Suivi en temps réel des livraisons
+- 📱 Interface responsive adaptée à tous les appareils
+- 🔄 Synchronisation en temps réel avec Firebase
 
 ## Technologies utilisées
 
-- React Native pour l'application mobile
-- TypeScript pour un code robuste et typé
-- Cloudflare Workers pour l'API
-- Cloudflare D1 (SQLite) pour la base de données
+- React avec TypeScript pour une application web robuste
+- Material-UI pour une interface moderne et responsive
+- Firebase Realtime Database pour la synchronisation en temps réel
+- Vite pour un développement rapide
 - GitHub Actions pour le CI/CD
 
 ## Installation
@@ -23,11 +24,12 @@ Application mobile pour la gestion et le suivi des livraisons de sapins de Noël
 npm install
 ```
 
-## Configuration Cloudflare
+## Configuration Firebase
 
-1. Créer un compte Cloudflare Workers
-2. Configurer Wrangler pour le déploiement
-3. Initialiser la base de données D1
+1. Créer un projet Firebase
+2. Activer la Realtime Database
+3. Configurer les règles de sécurité
+4. Copier les informations de configuration dans `src/config/firebase.ts`
 
 ## Développement
 
@@ -35,6 +37,13 @@ npm install
 npm run dev
 ```
 
+## Production
+
+```bash
+npm run build
+npm run preview
+```
+
 ## Déploiement
 
-Le déploiement est automatisé via GitHub Actions vers Cloudflare Workers.
+L'application est configurée pour être déployée sur Netlify. Le déploiement se fait automatiquement à chaque push sur la branche main.

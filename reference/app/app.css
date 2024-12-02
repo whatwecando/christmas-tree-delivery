@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.action-bar {
+    background-color: #c41e3a;
+    color: white;
+}
+
+.delivery-card {
+    background-color: #ffffff;
+    border-radius: 10;
+    margin: 8;
+    padding: 16;
+    elevation: 3;
+}
+
+.delivered {
+    background-color: #e6ffe6;
+}
+
+.not-delivered {
+    background-color: #fff5f5;
+}
+
+.christmas-title {
+    color: #c41e3a;
+    font-size: 24;
+    font-weight: bold;
+}
