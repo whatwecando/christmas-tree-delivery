@@ -1,0 +1,50 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "deliveries": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["customerName", "isDelivered", "treeSize", "requestedDeliveryDate", "scoutDeliveryRequested"],
+      "$deliveryId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['customerName', 'address', 'phoneNumber', 'treeSize', 'isDelivered', 'requestedDeliveryDate'])",
+        "customerName": { 
+          ".validate": "newData.isString() && newData.val().length > 0" 
+        },
+        "address": { 
+          ".validate": "newData.isString() && newData.val().length > 0" 
+        },
+        "phoneNumber": { 
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9]{2}\\s[0-9]{2}\\s[0-9]{2}\\s[0-9]{2}\\s[0-9]{2}$/)"
+        },
+        "treeSize": { 
+          ".validate": "newData.isString() && newData.val().length > 0" 
+        },
+        "isDelivered": { 
+          ".validate": "newData.isBoolean()" 
+        },
+        "requestedDeliveryDate": { 
+          ".validate": "newData.isString() && newData.val().matches(/^\\d{4}-\\d{2}-\\d{2}$/)"
+        },
+        "scoutDeliveryRequested": { 
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "deliveryDate": { 
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "history": {
+          "$historyId": {
+            ".validate": "newData.hasChildren(['userId', 'timestamp', 'action'])",
+            "userId": { ".validate": "newData.isString()" },
+            "timestamp": { ".validate": "newData.isNumber()" },
+            "action": { ".validate": "newData.isString()" },
+            "previousStatus": { ".validate": "newData.isBoolean()" },
+            "newStatus": { ".validate": "newData.isBoolean()" }
+          }
+        }
+      }
+    }
+  }
+}
