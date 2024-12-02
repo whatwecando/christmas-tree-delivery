@@ -1,2 +1,6 @@
-api
-reference
+api/
+api/**/*
+reference/
+reference/**/*
+.git
+.env
