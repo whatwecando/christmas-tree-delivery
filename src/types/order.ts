@@ -1,17 +1,29 @@
-export interface Customer {
-  id: string;
-  firstName: string;
-  lastName: string;
-  address: string;
-  phoneNumber: string;
-  email?: string;
+export enum DeliveryStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED'
 }
 
-export interface HistoryEntry {
-  timestamp: number;
-  action: string;
-  previousStatus: DeliveryStatus;
-  newStatus: DeliveryStatus;
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  REFUNDED = 'REFUNDED'
+}
+
+export interface Customer {
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+}
+
+export interface TreeSize {
+  id: number;
+  name: string;
+  height: string;
+  price: number;
 }
 
 export interface TreeOrder {
@@ -19,22 +31,20 @@ export interface TreeOrder {
   customer: Customer;
   treeSize: number;
   colorCode: string;
+  price: number;
   orderDate: string;
   requestScoutDelivery: boolean;
   deliveryStatus: DeliveryStatus;
   paymentStatus: PaymentStatus;
-  price: number;
+  history: {
+    timestamp: number;
+    action: string;
+    previousStatus: DeliveryStatus;
+    newStatus: DeliveryStatus;
+  }[];
+}
+
+export interface OrderUpdate {
+  deliveryStatus: DeliveryStatus;
   notes?: string;
-  history?: HistoryEntry[];
-}
-
-export enum DeliveryStatus {
-  PENDING = "À LIVRER",
-  DELIVERED = "LIVRÉ"
-}
-
-export enum PaymentStatus {
-  PENDING = "PENDING",
-  PAID = "PAID",
-  REFUNDED = "REFUNDED"
 }

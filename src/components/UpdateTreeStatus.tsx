@@ -1,85 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
 import {
   Box,
-  Paper,
+  Card,
+  CardContent,
   Typography,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
   Alert,
-  Snackbar,
   CircularProgress,
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { fr } from 'date-fns/locale';
-import { database } from '../config/firebase';
-import { ref, update, get } from 'firebase/database';
+import { ref, get, update } from 'firebase/database';
+import { db } from '../config/firebase';
+import { TreeOrder, DeliveryStatus } from '../types/order';
 
 export const UpdateTreeStatus = () => {
-  const { treeId } = useParams();
+  const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
-  const [status, setStatus] = useState<string>('pending');
-  const [pickupDate, setPickupDate] = useState<Date | null>(new Date());
+  const [order, setOrder] = useState<TreeOrder | null>(null);
+  const [status, setStatus] = useState<DeliveryStatus>(DeliveryStatus.PENDING);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchTree = async () => {
-      if (!treeId) return;
-      
+    const fetchOrder = async () => {
+      if (!orderId) return;
       try {
-        const treeRef = ref(database, `trees/${treeId}`);
-        const snapshot = await get(treeRef);
-        const treeData = snapshot.val();
-        
-        if (treeData) {
-          setStatus(treeData.pickup_status || 'pending');
-          setPickupDate(treeData.pickup_date ? new Date(treeData.pickup_date) : new Date());
-          setNotes(treeData.pickup_notes || '');
+        const orderRef = ref(db, `orders/${orderId}`);
+        const snapshot = await get(orderRef);
+        if (snapshot.exists()) {
+          const orderData = snapshot.val();
+          setOrder({ id: orderId, ...orderData });
+          setStatus(orderData.deliveryStatus);
+          setNotes(orderData.notes || '');
+        } else {
+          setError('Commande non trouvée');
         }
-        setLoading(false);
       } catch (err) {
-        setError('Erreur lors du chargement des données');
+        setError('Erreur lors du chargement de la commande');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchTree();
-  }, [treeId]);
-
-  const handleStatusChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newStatus: string,
-  ) => {
-    if (newStatus !== null) {
-      setStatus(newStatus);
-    }
-  };
+    fetchOrder();
+  }, [orderId]);
 
   const handleSubmit = async () => {
-    if (!treeId) return;
+    if (!orderId || !order) return;
 
     try {
-      const treeRef = ref(database, `trees/${treeId}`);
-      
-      await update(treeRef, {
-        pickup_status: status,
-        pickup_date: pickupDate ? format(pickupDate, 'yyyy-MM-dd') : null,
-        pickup_notes: notes,
-        updated_at: new Date().toISOString()
+      const orderRef = ref(db, `orders/${orderId}`);
+      const now = new Date().getTime();
+      const historyEntry = {
+        timestamp: now,
+        action: 'Mise à jour du statut',
+        previousStatus: order.deliveryStatus,
+        newStatus: status,
+      };
+
+      await update(orderRef, {
+        deliveryStatus: status,
+        notes,
+        history: [...(order.history || []), historyEntry],
       });
 
       setSuccess(true);
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      setTimeout(() => navigate('/'), 1500);
     } catch (err) {
       setError('Erreur lors de la mise à jour');
     }
@@ -93,88 +86,85 @@ export const UpdateTreeStatus = () => {
     );
   }
 
+  if (!order) {
+    return <Alert severity="error">Commande non trouvée</Alert>;
+  }
+
   return (
-    <Paper sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
-      <Typography variant="h5" gutterBottom>
-        Mise à jour du statut
-      </Typography>
-
-      <Box sx={{ my: 3 }}>
-        <Typography variant="subtitle1" gutterBottom>
-          Statut
+    <Card>
+      <CardContent>
+        <Typography variant="h5" gutterBottom>
+          Mise à jour de la commande
         </Typography>
-        <ToggleButtonGroup
-          color="primary"
-          value={status}
-          exclusive
-          onChange={handleStatusChange}
-          fullWidth
-        >
-          <ToggleButton value="pending">En attente</ToggleButton>
-          <ToggleButton value="scheduled">Planifié</ToggleButton>
-          <ToggleButton value="completed">Récupéré</ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
 
-      <Box sx={{ my: 3 }}>
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
-          <DatePicker
-            label="Date de récupération"
-            value={pickupDate}
-            onChange={(newValue) => setPickupDate(newValue)}
-            sx={{ width: '100%' }}
+        <Box mt={3}>
+          <Typography variant="subtitle1" gutterBottom>
+            Client: {order.customer.name}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            {order.customer.address}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            Tél: {order.customer.phone}
+          </Typography>
+        </Box>
+
+        <Box mt={4}>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Statut de livraison</InputLabel>
+            <Select
+              value={status}
+              label="Statut de livraison"
+              onChange={(e) => setStatus(e.target.value as DeliveryStatus)}
+            >
+              {Object.values(DeliveryStatus).map((status) => (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Notes"
+            multiline
+            rows={4}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
           />
-        </LocalizationProvider>
-      </Box>
+        </Box>
 
-      <Box sx={{ my: 3 }}>
-        <TextField
-          label="Notes"
-          multiline
-          rows={4}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          fullWidth
-        />
-      </Box>
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
 
-      <Box sx={{ mt: 4, display: 'flex', gap: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          fullWidth
-        >
-          Mettre à jour
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => navigate('/')}
-          fullWidth
-        >
-          Annuler
-        </Button>
-      </Box>
+        {success && (
+          <Alert severity="success" sx={{ mt: 2 }}>
+            Mise à jour réussie
+          </Alert>
+        )}
 
-      <Snackbar
-        open={success}
-        autoHideDuration={2000}
-        onClose={() => setSuccess(false)}
-      >
-        <Alert severity="success" sx={{ width: '100%' }}>
-          Mise à jour effectuée avec succès
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={!!error}
-        autoHideDuration={4000}
-        onClose={() => setError(null)}
-      >
-        <Alert severity="error" sx={{ width: '100%' }}>
-          {error}
-        </Alert>
-      </Snackbar>
-    </Paper>
+        <Box mt={3} display="flex" gap={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            Mettre à jour
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => navigate('/')}
+          >
+            Retour
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };

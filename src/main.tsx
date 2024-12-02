@@ -1,32 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import App from './App';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#2E7D32', // Vert forêt
-      light: '#4CAF50',
-      dark: '#1B5E20',
-    },
-    secondary: {
-      main: '#D32F2F', // Rouge pour Noël
-      light: '#EF5350',
-      dark: '#C62828',
-    },
-  },
-});
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import App from './App'
+import theme from './theme'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
         <App />
-      </ThemeProvider>
-    </BrowserRouter>
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>
-);
+)

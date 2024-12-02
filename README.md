@@ -1,22 +1,29 @@
-# Application de Livraison de Sapins de Noël
+# Christmas Tree Delivery App
 
-Application web responsive pour la gestion et le suivi des livraisons de sapins de Noël.
+Application web responsive pour la gestion des livraisons de sapins de Noël.
 
-## Fonctionnalités principales
+## Workflow de Développement
 
-- 🎄 Catalogue de sapins avec différentes tailles et variétés
-- 📅 Système de réservation avec choix de la date de livraison
-- 📍 Suivi en temps réel des livraisons
-- 📱 Interface responsive adaptée à tous les appareils
-- 🔄 Synchronisation en temps réel avec Firebase
+1. **Développement Local (Windsurf)**
+   - Développement dans l'IDE Windsurf
+   - Tests locaux avec `npm run dev`
+   - Commit et push des changements vers GitHub
 
-## Technologies utilisées
+2. **Intégration Continue (GitHub)**
+   - Les push sur `main` déclenchent automatiquement :
+     - Build de l'application
+     - Tests (si configurés)
+     - Déploiement vers Netlify
 
-- React avec TypeScript pour une application web robuste
-- Material-UI pour une interface moderne et responsive
-- Firebase Realtime Database pour la synchronisation en temps réel
-- Vite pour un développement rapide
-- GitHub Actions pour le CI/CD
+3. **Déploiement (Netlify)**
+   - Déploiement automatique après succès du build
+   - Preview des Pull Requests
+   - Rollback facile en cas de problème
+
+## Configuration Requise
+
+- Node.js 18+
+- npm 9+
 
 ## Installation
 
@@ -24,26 +31,28 @@ Application web responsive pour la gestion et le suivi des livraisons de sapins 
 npm install
 ```
 
-## Configuration Firebase
+## Scripts Disponibles
 
-1. Créer un projet Firebase
-2. Activer la Realtime Database
-3. Configurer les règles de sécurité
-4. Copier les informations de configuration dans `src/config/firebase.ts`
+- `npm run dev` : Lance le serveur de développement
+- `npm run build` : Build l'application pour la production
+- `npm run preview` : Preview la version de production en local
+- `npm run lint` : Vérifie le code avec ESLint
 
-## Développement
+## Structure du Projet
 
-```bash
-npm run dev
+```
+christmas-tree-delivery/
+├── src/               # Code source
+├── public/           # Fichiers statiques
+├── dist/            # Build de production
+└── .github/         # Configuration GitHub Actions
 ```
 
-## Production
+## Technologies Utilisées
 
-```bash
-npm run build
-npm run preview
-```
-
-## Déploiement
-
-L'application est configurée pour être déployée sur Netlify. Le déploiement se fait automatiquement à chaque push sur la branche main.
+- React 18
+- TypeScript
+- Vite
+- Firebase
+- Material UI
+- TailwindCSS
