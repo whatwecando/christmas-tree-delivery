@@ -1,0 +1,16 @@
+name = "christmas-tree-api"
+main = "src/index.ts"
+compatibility_date = "2023-12-01"
+
+[vars]
+JWT_SECRET = "change-me-in-production"
+
+[[kv_namespaces]]
+binding = "ORDERS"
+id = "f5587a07ab7f4e638d42095be22dff26"
+preview_id = "6cf34a1c62d54092b19e2b32b3cf3a1d"
+
+[[kv_namespaces]]
+binding = "USERS"
+id = "eedca4bf67ee4d3689cd4adc101e5426"
+preview_id = "15e4f2d34a854a008f342b70f639fb34"
