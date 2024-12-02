@@ -7,6 +7,7 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://votre-worker.workers.dev"
-  }
+    "NEXT_PUBLIC_API_URL": "https://christmas-tree-api.pcarontelders.workers.dev"
+  },
+  "ignoreCommand": "!api/**"
 }
